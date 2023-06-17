@@ -1,39 +1,60 @@
-import Expenses from './components/Expenses/Expenses';
-import NewExpense from './components/NewExpense/NewExpense';
+import React, {useState} from "react";
+import CourseInput from "./components/CourseComponent/CourseInput/CourseInput";
+import "./App.css";
+import CourseLists from "./components/CourseComponent/CourseLists/CourseLists";
 
 function App() {
 
-  const expenses = [
-    {
-      id: 'e1',
-      title: 'Toilet Paper',
-      amount: 94.12,
-      date: new Date(2020, 7, 14),
-    },
-    { id: 'e2', title: 'New TV', amount: 799.49, date: new Date(2021, 2, 12) },
-    {
-      id: 'e3',
-      title: 'Car Insurance',
-      amount: 294.67,
-      date: new Date(2021, 2, 28),
-    },
-    {
-      id: 'e4',
-      title: 'New Desk (Wooden)',
-      amount: 450,
-      date: new Date(2021, 5, 12),
-    },
-  ];
+  const [courseGoals, setCourseGoals] = useState([]);
 
-  const addExpenseHandler = expense => {
-    console.log(expense);
+  const addGoalHandler = goal => {
+    // if(courseGoals.length === 0){
+    //   console.log("eksekusi kode 0")
+    //   setCourseGoals(courseGoals[0] = {text: goal, id: Math.random().toString()})
+    //   console.log(courseGoals);
+    // }else{
+    //   setCourseGoals(prevGoals => {
+    //     const updateGoals = [...prevGoals];
+    //     updateGoals.unshift({text: goal, id: Math.random().toString()});
+    //     return updateGoals;
+    //   })
+    // }
+
+    if (courseGoals.length === 0) {
+      courseGoals[0] = { text: goal, id: Math.random().toString() };
+      setCourseGoals([...courseGoals]);
+    } else {
+      setCourseGoals(prevGoals => {
+        const updatedGoals = [...prevGoals];
+        updatedGoals.unshift({ text: goal, id: Math.random().toString() });
+        return updatedGoals;
+      });
+    }
+  }
+
+  const deleteItemHandler = goalId => {
+    setCourseGoals(prevGoals => {
+      const updatedGoals = prevGoals.filter(goal => goal.id !== goalId);
+      return updatedGoals;
+    });
   };
 
+  let content = (<p style={{textAlign: 'center'}}>No Goals Found. Add One Goals</p>)
+
+  if(courseGoals.length > 0){
+    content = (
+      <CourseLists items={courseGoals} onDeleteItem={deleteItemHandler}></CourseLists>
+    )
+  }
 
   return(
     <div>
-      <NewExpense onAddExpense={addExpenseHandler}/>
-      <Expenses items={expenses}/>
+      <div id="goal-form">
+        <CourseInput onAddGoal={addGoalHandler}/>
+      </div>
+      <div id="goals">
+        {content}
+      </div>
     </div>
   )
 }
