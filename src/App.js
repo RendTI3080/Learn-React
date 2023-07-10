@@ -1,31 +1,28 @@
-import React, {useState} from 'react';
-import Header from './components/Header/Header';
-import UserInput from './components/UserInput/UserInput';
+import React, { useState } from "react";
+import Header from "./components/Layout/Header";
+import Meals from "./components/Meals/Meals";
+import CartProvider from "./components/Store/CartProvider";
+import Cart from "./components/Cart/Cart";
 
 function App() {
-  const [userInput, setUserInput] = useState(null);
+  const [cartIsShown, setCartIShown] = useState(false);
 
-  // calculator handler
-  const calculatorHandler = (userInput) => {
-    setUserInput(userInput);
-  };
-
-  // empty array for saving data 
-  const yearlyData = [];
-
-  // input function
-  if(userInput){
-
+  const showCartHandler = () => {
+    setCartIShown(true);
   }
 
-  return(
-    <div>
-      <Header/>
-      <UserInput/>
-
-      {!userInput && <p style={{textAlign:'center'}}>No Investment calculated yet</p>}
-    </div>
-  )
+  const hideCartHandler = () => {
+    setCartIShown(false);
+  }
+  return (
+    <CartProvider>
+      {cartIsShown && <Cart onClose={hideCartHandler}/>}
+      <Header onShowCart={showCartHandler}/>
+      <main>
+        <Meals />
+      </main>
+    </CartProvider>
+  );
 }
 
 export default App;
